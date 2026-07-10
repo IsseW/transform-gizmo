@@ -22,6 +22,10 @@ impl SubGizmoKind for Arcball {
     type State = ArcballState;
     type PickPreview = PickResult;
 
+    fn mode(_params: &Self::Params) -> crate::GizmoMode {
+        crate::GizmoMode::Arcball
+    }
+
     fn pick_preview(subgizmo: &SubGizmoConfig<Self>, ray: Ray) -> super::common::PickResult
     where
         Self: Sized,

@@ -48,6 +48,15 @@ impl SubGizmoKind for Rotation {
     type State = RotationState;
     type PickPreview = RotationPickResult;
 
+    fn mode(params: &Self::Params) -> crate::GizmoMode {
+        match params.direction {
+            GizmoDirection::X => crate::GizmoMode::RotateX,
+            GizmoDirection::Y => crate::GizmoMode::RotateY,
+            GizmoDirection::Z => crate::GizmoMode::RotateZ,
+            GizmoDirection::View => crate::GizmoMode::RotateView,
+        }
+    }
+
     fn pick_preview(subgizmo: &SubGizmoConfig<Self>, ray: Ray) -> Self::PickPreview
     where
         Self: Sized,

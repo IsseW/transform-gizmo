@@ -70,6 +70,17 @@ impl Gizmo {
         self.subgizmos.iter().any(|subgizmo| subgizmo.is_focused())
     }
 
+    /// Mode of the subgizmo being interacted with after the latest
+    /// [`Gizmo::update`] call, if any.
+    pub fn active_mode(&self) -> Option<GizmoMode> {
+        self.active_subgizmo_id.and_then(|id| {
+            self.subgizmos
+                .iter()
+                .find(|subgizmo| subgizmo.id() == id)
+                .map(|subgizmo| subgizmo.mode())
+        })
+    }
+
     /// Updates the gizmo based on given interaction information.
     ///
     /// # Examples

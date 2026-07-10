@@ -33,6 +33,10 @@ impl SubGizmoKind for Scale {
     type State = ScaleState;
     type PickPreview = PickResult;
 
+    fn mode(params: &Self::Params) -> GizmoMode {
+        params.mode
+    }
+
     fn pick_preview(subgizmo: &SubGizmoConfig<Self>, ray: Ray) -> super::common::PickResult
     where
         Self: Sized,

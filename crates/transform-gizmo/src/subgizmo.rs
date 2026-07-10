@@ -5,7 +5,11 @@ use std::ops::Deref;
 
 use enum_dispatch::enum_dispatch;
 
-use crate::{GizmoDrawData, GizmoResult, config::PreparedGizmoConfig, gizmo::Ray};
+use crate::{
+    GizmoDrawData, GizmoResult,
+    config::{GizmoMode, PreparedGizmoConfig},
+    gizmo::Ray,
+};
 
 pub(crate) use arcball::ArcballSubGizmo;
 pub(crate) use rotation::RotationSubGizmo;
@@ -42,6 +46,8 @@ pub(crate) trait SubGizmoControl {
     fn is_focused(&self) -> bool;
     /// Returns true if this subgizmo is currently active.
     fn is_active(&self) -> bool;
+    /// Mode of this subgizmo.
+    fn mode(&self) -> GizmoMode;
     /// Pick the subgizmo based on pointer ray. If it is close enough to
     /// the mouse pointer, distance from camera to the subgizmo is returned.
     fn pick(&mut self, ray: Ray) -> Option<f64>;
@@ -56,6 +62,10 @@ pub(crate) trait SubGizmoKind: 'static {
     type Params: Debug + Copy + Hash;
     type State: Debug + Copy + Clone + Send + Sync + Default + 'static;
     type PickPreview: Picked + 'static;
+
+    fn mode(params: &Self::Params) -> GizmoMode
+    where
+        Self: Sized;
 
     fn pick(subgizmo: &mut SubGizmoConfig<Self>, ray: Ray) -> Option<f64>
     where
@@ -146,6 +156,10 @@ where
 
     fn is_active(&self) -> bool {
         self.active
+    }
+
+    fn mode(&self) -> GizmoMode {
+        T::mode(&self.params)
     }
 
     fn pick(&mut self, ray: Ray) -> Option<f64> {

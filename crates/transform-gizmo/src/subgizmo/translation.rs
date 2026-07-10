@@ -34,6 +34,10 @@ impl SubGizmoKind for Translation {
     type State = TranslationState;
     type PickPreview = PickResult;
 
+    fn mode(params: &Self::Params) -> GizmoMode {
+        params.mode
+    }
+
     fn pick_preview(subgizmo: &TranslationSubGizmo, ray: Ray) -> PickResult {
         match (subgizmo.transform_kind, subgizmo.direction) {
             (TransformKind::Plane, GizmoDirection::View) => pick_circle(
